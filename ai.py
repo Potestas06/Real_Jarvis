@@ -1,4 +1,5 @@
 from llama_cpp import Llama
+import os
 import json
 import pyttsx3
 
@@ -9,11 +10,9 @@ print("loaded models")
 
 def questionAI(question):
     print("asking...")
-    asked = llm("Question: " + question + "  Answer:", stop=["Question:", "\n"], max_tokens=200)
+    asked = llm("Question: " + question + "  Answer:", stop=["Question:", "\n"], max_tokens=40)
     anser = asked['choices'][0]['text']
     print(anser)
     engin.say(anser)
     engin.runAndWait()
     return
-
-

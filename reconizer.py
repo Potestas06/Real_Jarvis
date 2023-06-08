@@ -1,20 +1,10 @@
 import speech_recognition
-import os
 import ai
 
 running = True
 reconizer = speech_recognition.Recognizer()
+
 print("listening...")
-
-def getAnser(günter_text):
-    if "stop" in günter_text:
-        running = False
-        print("Program stopped.")
-    else:
-        print("askingAI:")
-        ai.questionAI(günter_text)
-        print("listening...")
-
 while running:
     try:
         with speech_recognition.Microphone() as mic:
@@ -25,10 +15,17 @@ while running:
             if "günter" in text:
                 günter_text = text[text.index("günter") + len("günter"):].strip()
                 print("günter detected! with text: " + günter_text)
-                getAnser(günter_text)
+                if "stop" in günter_text:
+                    running = False
+                    print("Program stopped.")
+                else:
+                    print("askingAI:")
+                    ai.questionAI(günter_text)
+                    print("listening...")
             else:
                 print("no günter detected but detected: " + text)
                 print("listening...")
+    # Do not delete this except block. It is needed to keep the program running.
     except speech_recognition.UnknownValueError:
         reconizer = speech_recognition.Recognizer()
         continue
