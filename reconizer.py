@@ -2,7 +2,7 @@ import speech_recognition
 import pyttsx3
 
 reconizer = speech_recognition.Recognizer()
-
+print("listening...")
 while True:
     try:
         with speech_recognition.Microphone() as mic:
