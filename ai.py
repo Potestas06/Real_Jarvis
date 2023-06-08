@@ -9,10 +9,11 @@ print("loaded models")
 
 def questionAI(question):
     print("asking...")
-    asked = llm("Question: " + question + "  Answer:", stop=["Question:", "\n"])
+    asked = llm("Question: " + question + "  Answer:", stop=["Question:", "\n"], max_tokens=200)
     anser = asked['choices'][0]['text']
     print(anser)
     engin.say(anser)
     engin.runAndWait()
     return
+
 
