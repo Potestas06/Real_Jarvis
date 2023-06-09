@@ -1,6 +1,4 @@
 from llama_cpp import Llama
-import os
-import json
 import pyttsx3
 
 engin = pyttsx3.init()
