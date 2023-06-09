@@ -1,8 +1,14 @@
 import speech_recognition
 import ai
 
+
 running = True
 reconizer = speech_recognition.Recognizer()
+
+def handling():
+    print("askingAI:")
+    ai.questionAI(günter_text)
+    print("listening...")
 
 print("listening...")
 while running:
@@ -19,9 +25,7 @@ while running:
                     running = False
                     print("Program stopped.")
                 else:
-                    print("askingAI:")
-                    ai.questionAI(günter_text)
-                    print("listening...")
+                    handling()
             else:
                 print("no günter detected but detected: " + text)
                 print("listening...")
