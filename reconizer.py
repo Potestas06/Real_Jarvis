@@ -34,19 +34,19 @@ class Assistant():
                 text = self.reconizer.recognize_google(audio, language="de-DE")
                 text = text.lower()
                 print(text)
-                self.text.config(text=text)
+                self.text.config(text="asked: " + text)
                 if "günther" in text or "günter" in text:
                     self.label.config(fg="red")
                     try:
                         audio = self.reconizer.listen(mic)
                         text = self.reconizer.recognize_whisper(audio, language="german")
-                        self.text.config(text=text)
+                        self.text.config(text="asked: " +text)
                         if text == "stop":
                             self.root.destroy()
                         elif text is not None:
                             self.label.config(fg="black")
                             self.label.config(text="⌛")
-                            anser = ai.questionAI(text + "?   antworte auf deutsch")
+                            anser = ai.questionAI(text)
                             self.anser.config(text="anser: " + anser)
                             self.label.config(text="🤖")
                     except speech_recognition.UnknownValueError:
