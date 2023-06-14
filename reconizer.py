@@ -13,22 +13,24 @@ while running:
     try:
         with speech_recognition.Microphone() as source:
             audio = reconizer.listen(source)
-            text = reconizer.recognize_whisper(audio, language="english")
-            if "günter" in text:
-                günter_text = text[text.index("günter") + len("günter"):].strip()
-                print("günter detected! with text: " + günter_text)
-                if "stop" in günter_text:
+            text = reconizer.recognize_whisper(audio, language="german")
+            if "Günther" in text:
+                Günther_text = text[text.index("Günther") + len("Günther"):].strip()
+                print("Günther detected! with text: " + Günther_text)
+                if "stop" in Günther_text:
                     running = False
                     print("Program stopped.")
                 else:
                     print("===================================")
                     print("askingAI:")
-                    ai.questionAI(günter_text)
+                    ai.questionAI(Günther_text)
                     print("===================================")
                     print("listening...")
             else:
-                print("no günter detected! with text: " + text)
+                print("no Günther detected! with text: " + text)
                 print("listening...")
     except speech_recognition.UnknownValueError:
+        print("reconizer error!")
         reconizer = speech_recognition.Recognizer()
+        print("listening...")
         continue
