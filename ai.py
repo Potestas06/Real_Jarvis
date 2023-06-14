@@ -11,6 +11,9 @@ def questionAI(question):
     asked = llm("Question: " + question + "  Answer:", stop=["Question:", "\n"], max_tokens=400)
     anser = asked['choices'][0]['text']
     print(anser)
-    engin.say(anser)
-    engin.runAndWait()
-    return
+    if anser != "":
+        engin.say(anser)
+        engin.runAndWait()
+    else:
+        engin.say("sorry, ich kann dir nicht helfen")
+    return(anser)
