@@ -36,12 +36,16 @@ class Assistant():
                         if text == "stop":
                             self.root.destroy()
                         elif text is not None:
-                            ai.questionAI(text)
                             self.label.config(fg="black")
+                            self.label.config(text="⌛")
+                            ai.questionAI(text)
+                            self.label.config(text="🤖")
                     except speech_recognition.UnknownValueError:
                         print("UnknownValueError")
                         self.reconizer = speech_recognition.Recognizer()
                         continue
+                    except:
+                        print("Error: " + sys.exc_info()[0])
 
 Assistant()
 
