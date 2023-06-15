@@ -1,6 +1,6 @@
-speechrecognition
+SpeechRecognition
 pyttsx3
 pyaudio
 llama-cpp-python==0.1.39
 customtkinter
-git+https://github.com/openai/whisper.git soundfile
+git+https://github.com/openai/whisper.git#egg=soundfile

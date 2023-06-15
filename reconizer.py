@@ -26,30 +26,35 @@ class Assistant():
     def Wakeword(self):
         print("listening...")
         while True:
-            with speech_recognition.Microphone() as mic:
-                self.recognizer.adjust_for_ambient_noise(mic, duration=0.2)
-                audio = self.recognizer.listen(mic)
-                text = self.recognizer.recognize_google(audio, language="de-DE")
-                text = text.lower()
-                print(text)
-                self.text_label.config(text="asked: " + text)
-                if "günther" in text or "günter" in text:
-                    self.answer_label.config(fg="red")
-                    try:
-                        audio = self.recognizer.listen(mic)
-                        text = self.recognizer.recognize_whisper(audio, language="german")
-                        self.text_label.config(text="asked: " +text)
-                        if text == "stop":
-                            self.root.destroy()
-                        elif text is not None:
-                            self.answer_label.config(fg="black")
-                            self.answer_label.config(text="⌛")
-                            anser = ai.questionAI(text)
-                            self.answer_label.config(text="anser: " + anser)
-                            self.answer_label.config(text="🤖")
-                    except speech_recognition.UnknownValueError:
-                        print("UnknownValueError")
-                        self.recognizer = speech_recognition.Recognizer()
-                        continue
+            try:
+                with speech_recognition.Microphone() as mic:
+                    self.recognizer.adjust_for_ambient_noise(mic)
+                    audio = self.recognizer.listen(mic)
+                    text = self.recognizer.recognize_google(audio, language="de-DE")
+                    text = text.lower()
+                    print(text)
+                    self.text_label.config(text="asked: " + text)
+                    if "günther" in text or "günter" in text:
+                        self.answer_label.config(fg="red")
+                        try:
+                            audio = self.recognizer.listen(mic)
+                            text = self.recognizer.recognize_whisper(audio, language="german")
+                            self.text_label.config(text="asked: " +text)
+                            if text == "stop":
+                                self.root.destroy()
+                            elif text is not None:
+                                self.answer_label.config(fg="black")
+                                self.answer_label.config(text="⌛")
+                                anser = ai.questionAI(text)
+                                self.answer_label.config(text="anser: " + anser)
+                                self.answer_label.config(text="🤖")
+                        except speech_recognition.UnknownValueError:
+                            print("UnknownValueError at whisper")
+                            self.recognizer = speech_recognition.Recognizer()
+                            continue
+            except speech_recognition.UnknownValueError:
+                print("UnknownValueError at wakeword")
+                self.recognizer = speech_recognition.Recognizer()
+                continue
 Assistant()
 
