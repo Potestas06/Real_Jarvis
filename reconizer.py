@@ -56,5 +56,8 @@ class Assistant():
                 print("UnknownValueError at wakeword")
                 self.recognizer = speech_recognition.Recognizer()
                 continue
+            except Exception as e:
+                print("Error at wakeword: " + str(e))
+                continue
 Assistant()
 
