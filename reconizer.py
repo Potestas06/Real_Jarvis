@@ -2,6 +2,9 @@ import threading
 import tkinter as tk
 import speech_recognition
 import ai
+import pyaudio
+import pvporcupine
+from dotenv import load_dotenv
 
 recognizer = speech_recognition.Recognizer()
 
@@ -9,6 +12,7 @@ recognizer = speech_recognition.Recognizer()
 class Assistant():
     # init
     def __init__(self):
+        self.pa = pyaudio.PyAudio()
         self.recognizer = speech_recognition.Recognizer()
         self.ai = ai
         self.root = tk.Tk()
@@ -22,19 +26,23 @@ class Assistant():
         threading.Thread(target=self.Wakeword).start()
         self.root.mainloop()
 
+    
+
     # lisens for the wakeword and then starts the question ai
     def Wakeword(self):
+        def get_next_audio_frame():
+            pass
         print("listening...")
         while True:
             try:
                 with speech_recognition.Microphone() as mic:
                     self.recognizer.adjust_for_ambient_noise(mic)
                     audio = self.recognizer.listen(mic)
-                    text = self.recognizer.recognize_google(audio, language="de-DE")
-                    text = text.lower()
-                    print(text)
-                    self.text_label.config(text="asked: " + text)
-                    if "günther" in text or "günter" in text:
+                    engine = pvporcupine.create(access_key='os.getenv("APIKEY")', keywords=['picovoice', 'bumblebee'])
+                    audio_frame = get_next_audio_frame()
+                    keyword_index = engine.process(audio_frame)
+                    if keyword_index == 0:
+                        print("Hotword Detected")
                         self.answer_label.config(fg="red")
                         try:
                             audio = self.recognizer.listen(mic)
@@ -42,6 +50,7 @@ class Assistant():
                             self.text_label.config(text="asked: " +text)
                             if text == "stop":
                                 self.root.destroy()
+                                break
                             elif text is not None:
                                 self.answer_label.config(fg="black")
                                 self.answer_label.config(text="⌛")
@@ -52,6 +61,8 @@ class Assistant():
                             print("UnknownValueError at whisper")
                             self.recognizer = speech_recognition.Recognizer()
                             continue
+                    elif engine is not None:
+                        engine.delete()
             except speech_recognition.UnknownValueError:
                 print("UnknownValueError at wakeword")
                 self.recognizer = speech_recognition.Recognizer()
@@ -59,5 +70,7 @@ class Assistant():
             except Exception as e:
                 print("Error at wakeword: " + str(e))
                 continue
+            
+    
 Assistant()
 
