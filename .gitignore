@@ -160,4 +160,5 @@ cython_debug/
 #.idea/
 
 model/*
-.vscode/*
+model
+.vscode

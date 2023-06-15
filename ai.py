@@ -1,11 +1,13 @@
 from llama_cpp import Llama
 import pyttsx3
 
+# initilaize the ai model
 engin = pyttsx3.init()
 print("Initializing...")
 llm = Llama(model_path="model\ggml-model-q4_1.bin")
 print("loaded models")
 
+# ask the ai a question
 def questionAI(question):
     print("asking...")
     asked = llm("Question: " + question + "  Answer:", stop=["Question:", "\n"], max_tokens=400)
