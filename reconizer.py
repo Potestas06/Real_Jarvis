@@ -4,7 +4,6 @@ import speech_recognition
 import ai
 import pyaudio
 import pvporcupine
-from dotenv import load_dotenv
 
 recognizer = speech_recognition.Recognizer()
 
@@ -26,7 +25,6 @@ class Assistant():
         threading.Thread(target=self.Wakeword).start()
         self.root.mainloop()
 
-    
 
     # lisens for the wakeword and then starts the question ai
     def Wakeword(self):
@@ -70,7 +68,5 @@ class Assistant():
             except Exception as e:
                 print("Error at wakeword: " + str(e))
                 continue
-            
-    
-Assistant()
 
+Assistant()
