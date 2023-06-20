@@ -3,5 +3,8 @@ pyttsx3
 pyaudio
 llama-cpp-python==0.1.39
 customtkinter
+wave
+pvrecorder
+argparse
 python-dotenv
-git+https://github.com/openai/whisper.git#egg=soundfile
+# pip install git+https://github.com/openai/whisper.git soundfile
