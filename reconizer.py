@@ -3,13 +3,10 @@ import tkinter as tk
 import speech_recognition
 import ai
 import pyaudio
-import argparse
 import os
 from dotenv import load_dotenv
 import struct
-import wave
 import pvporcupine
-import pvrecorder
 
 load_dotenv()
 recognizer = speech_recognition.Recognizer()
