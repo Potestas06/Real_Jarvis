@@ -3,9 +3,7 @@ pyttsx3
 pyaudio
 llama-cpp-python==0.1.39
 customtkinter
-wave
 python-dotenv
-pvrecorder
 argparse
 python-dotenv
 # install this
