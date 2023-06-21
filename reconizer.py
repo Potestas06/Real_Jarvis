@@ -5,18 +5,24 @@ import ai
 import pyaudio
 import argparse
 import os
+from dotenv import load_dotenv
 import struct
 import wave
 import pvporcupine
 import pvrecorder
 
+load_dotenv()
 recognizer = speech_recognition.Recognizer()
+
+APIKEY = os.getenv("APIKEY")
 
 
 class Assistant():
     # init
     def __init__(self):
         self.pa = pyaudio.PyAudio()
+        self.handle = pvporcupine.create(access_key=APIKEY, keywords=['computer'])
+        self.audio = pyaudio.PyAudio()
         self.recognizer = speech_recognition.Recognizer()
         self.ai = ai
         self.root = tk.Tk()
@@ -33,19 +39,27 @@ class Assistant():
 
     # lisens for the wakeword and then starts the question ai
     def Wakeword(self):
-        def get_next_audio_frame():
-            pass
+        stream = self.audio.open(
+            rate=self.handle.sample_rate,
+            channels=1,
+            format=pyaudio.paInt16,
+            input=True,
+            frames_per_buffer=self.handle.frame_length
+        )
         print("listening...")
         while True:
             try:
-                with speech_recognition.Microphone() as mic:
-                    self.recognizer.adjust_for_ambient_noise(mic)
-                    audio = self.recognizer.listen(mic)
-                    engine = pvporcupine.create(access_key='os.getenv("APIKEY")', keywords=['picovoice', 'bumblebee'])
-                    audio_frame = get_next_audio_frame()
-                    keyword_index = engine.process(audio_frame)
-                    if keyword_index == 0:
-                        print("Hotword Detected")
+                pcm = stream.read(self.handle.frame_length)
+                pcm = struct.unpack_from("h" * self.handle.frame_length, pcm)
+
+                keyword_index = self.handle.process(pcm)
+
+                if keyword_index >= 0:
+                    print("Wake word detected!")
+                    with speech_recognition.Microphone() as mic:
+                        self.recognizer.adjust_for_ambient_noise(mic)
+                        audio = self.recognizer.listen(mic)
+                        print("listening...")
                         self.answer_label.config(fg="red")
                         try:
                             audio = self.recognizer.listen(mic)
@@ -60,14 +74,13 @@ class Assistant():
                                 anser = ai.questionAI(text)
                                 self.answer_label.config(text="anser: " + anser)
                                 self.answer_label.config(text="🤖")
+                                break
                         except speech_recognition.UnknownValueError:
                             print("UnknownValueError at whisper")
                             self.recognizer = speech_recognition.Recognizer()
                             continue
-                    elif engine is not None:
-                        engine.delete()
             except speech_recognition.UnknownValueError:
-                print("UnknownValueError at wakeword")
+                print("UnknownValueError at speech_recognition")
                 self.recognizer = speech_recognition.Recognizer()
                 continue
             except Exception as e:

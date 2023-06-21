@@ -4,7 +4,7 @@ import pyttsx3
 # initilaize the ai model
 engin = pyttsx3.init()
 print("Initializing...")
-llm = Llama(model_path="model\ggml-model-q4_1.bin")
+llm = Llama(model_path="model\Model_V6.bin")
 print("loaded models")
 
 # ask the ai a question
