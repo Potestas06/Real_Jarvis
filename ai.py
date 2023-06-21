@@ -4,14 +4,14 @@ import pyttsx3
 # initilaize the ai model
 engin = pyttsx3.init()
 print("Initializing...")
-llm = Llama(model_path="model\Model_V6.bin")
+llm = Llama(model_path="model/Model_V6.bin")
 print("loaded models")
 
 # ask the ai a question
 def questionAI(question):
     print("asking...")
     asked = llm("Question: " + question + "  Answer:", stop=["Question:", "\n"], max_tokens=400)
-    anser = asked['choices'][0]['text']
+    anser = asked['choices'][0]['text'] # type: ignore
     print(anser)
     if anser != "":
         engin.say(anser)

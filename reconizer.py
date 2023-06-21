@@ -57,20 +57,20 @@ class Assistant():
                         self.recognizer.adjust_for_ambient_noise(mic)
                         audio = self.recognizer.listen(mic)
                         print("listening...")
-                        self.answer_label.config(fg="red")
+                        self.robot_label.config(fg="red")
                         try:
                             audio = self.recognizer.listen(mic)
-                            text = self.recognizer.recognize_whisper(audio, language="german")
+                            text = self.recognizer.recognize_whisper(audio)
                             self.text_label.config(text="asked: " +text)
                             if text == "stop":
                                 self.root.destroy()
                                 break
                             elif text is not None:
-                                self.answer_label.config(fg="black")
-                                self.answer_label.config(text="⌛")
+                                self.robot_label.config(fg="black")
+                                self.robot_label.config(text="⌛")
                                 anser = ai.questionAI(text)
                                 self.answer_label.config(text="anser: " + anser)
-                                self.answer_label.config(text="🤖")
+                                self.robot_label.config(text="🤖")
                                 break
                         except speech_recognition.UnknownValueError:
                             print("UnknownValueError at whisper")
