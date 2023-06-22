@@ -87,7 +87,20 @@ def second_request(function_name, content):
         "name": function_name,
         "content": content
     }]
-    messages = [{"role": msg["role"], "content": msg["content"] or "None", "function_call": msg["function_call"] or "None" } for msg in previous] + message
+    previous.append(message[0])
+    messages = [
+        {
+            "role": msg["role"],
+            "content": msg["content"] or "None",
+            "name": msg["name"] if "name" in msg else None
+        }
+        if "name" in msg else
+        {
+            "role": msg["role"],
+            "content": msg["content"] or "None"
+        }
+        for msg in previous
+    ]
     response = openai.ChatCompletion.create(
         model=os.getenv("MODEL"),
         messages=messages,
@@ -95,18 +108,20 @@ def second_request(function_name, content):
         function_call="auto"
     )
 
-    message = response.choices[0].message # type: ignore
+    print(response)
+    message = response.choices[0].message
     previous.append(message)
     return message["content"]
+
+
 
 def request(text):
     message = [{
         "role": "user",
-        "content": text
+        "content": text,
     }]
-
-    messages = message + [{"role": msg["role"], "content": msg["content"]} for msg in previous]
     previous.append(message[0])
+    messages = [{"role": msg["role"], "content": msg["content"]} for msg in previous]
     response = openai.ChatCompletion.create(
         model=os.getenv("MODEL"),
         messages=messages,
@@ -123,18 +138,22 @@ def request(text):
         response = None
         function_name = function_call["name"]
         if function_name == "check_weather":
+            print("check_weather")
             response = functions.check_weather(arguments["city"])
         elif function_name == "create_task":
+            print("create_task")
             response = functions.create_task(arguments["content"])
         elif function_name == "check_task_status":
+            print("check_task_status")
             response = functions.check_task_status(arguments["task_name"])
         elif function_name == "close_task_by_name":
+            print("close_task_by_name")
             response = functions.close_task_by_name(arguments["task_name"])
         elif function_name == "get_undone_tasks":
+            print("get_undone_tasks")
             response = functions.get_undone_tasks()
-        print(previous)
         return second_request(function_name, response)
     else:
         return message["content"]
 
-print(request("what is the wehater in berlin?"))
+print(f"wheather in berlin: {request('what is the wehater in berlin?')}")
