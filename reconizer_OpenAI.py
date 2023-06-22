@@ -8,6 +8,7 @@ import openai
 from dotenv import load_dotenv
 import functions
 import json
+import requests
 import struct
 import pvporcupine
 
@@ -15,9 +16,9 @@ previous = []
 
 load_dotenv()
 recognizer = speech_recognition.Recognizer()
-openai.api_key = os.getenv("OPENAIKEY")
-
+url = "https://api.openai.com/v1/chat/completions"
 APIKEY = os.getenv("APIKEY")
+OPENAIKEY = os.getenv("OPENAIKEY")
 
 
 class Assistant():
@@ -112,14 +113,21 @@ class Assistant():
                     "description": "Gets all undone tasks and returns them as a list"
                 }
             ]
+            data ={
+                "model": os.getenv("MODEL"),
+                "messages": messages,
+                "function": function_list
+            }
 
-            completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=messages,
-                additional_context=function_list
-            )
+            headers = {
+                "Authorization": f"Bearer {OPENAIKEY}",
+                "Content-Type": "application/json",
+            }
 
-            message = completion.choices[0].message # type: ignore
+            response = requests.post(url, headers=headers, json=data)
+
+
+            message = response.choices[0].message # type: ignore
             previous.append(message)
 
             if "function_call" in message:
