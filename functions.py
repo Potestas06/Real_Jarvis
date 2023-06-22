@@ -46,7 +46,7 @@ def create_task(content):
     try:
         response = requests.post(base_todo_url, headers=headers, json=data)
         if response.status_code == 200:
-            result = "Task created successfully!"
+            result = f"Task {content} created successfully!"
         else:
             result = "Failed to create task." + response.text
     except requests.exceptions.RequestException as e:
@@ -72,7 +72,7 @@ def close_task_by_name(task_name):
                     task_id = task["id"]
                     close_response = requests.post(f"{base_todo_url}/{task_id}/close", headers=headers)
                     if close_response.status_code == 204:
-                        return "Task closed successfully!"
+                        return f"Task {task_name} closed successfully!"
                     else:
                         return "Failed to close task."
             return "Task not found."

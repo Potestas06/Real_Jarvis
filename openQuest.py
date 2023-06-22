@@ -88,19 +88,29 @@ def second_request(function_name, content):
         "content": content
     }]
     previous.append(message[0])
+    print(previous)
     messages = [
         {
             "role": msg["role"],
             "content": msg["content"] or "None",
-            "name": msg["name"] if "name" in msg else None
+            "name": msg["name"] or "None"
         }
-        if "name" in msg else
+        if msg["role"] == "function" else
         {
             "role": msg["role"],
             "content": msg["content"] or "None"
         }
+        if msg["role"] == "assistant" else
+        {
+            "role": msg["role"],
+            "content": msg["content"] or "None",
+            "function_call": msg.get("function_call") or "None"
+        }
         for msg in previous
     ]
+
+
+    print(messages)
     response = openai.ChatCompletion.create(
         model=os.getenv("MODEL"),
         messages=messages,
@@ -109,7 +119,7 @@ def second_request(function_name, content):
     )
 
     print(response)
-    message = response.choices[0].message
+    message = response.choices[0].message # type: ignore
     previous.append(message)
     return message["content"]
 
@@ -129,9 +139,17 @@ def request(text):
         function_call="auto"
     )
     message = response.choices[0].message # type: ignore
-    previous.append(message)
 
     if "function_call" in message:
+        apender = [{
+        "role": "assistant",
+        "content": message["content"] or "None",
+        "function_call": {
+            "name": message["function_call"]["name"] or "None",
+            "arguments": json.dumps(message["function_call"]["arguments"]) or "None"
+        }
+        }]
+        previous.append(apender[0])
         function_call = message["function_call"]
         arguments = json.loads(function_call["arguments"])
 
@@ -140,20 +158,30 @@ def request(text):
         if function_name == "check_weather":
             print("check_weather")
             response = functions.check_weather(arguments["city"])
+            return second_request(function_name, response)
         elif function_name == "create_task":
             print("create_task")
             response = functions.create_task(arguments["content"])
+            return second_request(function_name, response)
         elif function_name == "check_task_status":
             print("check_task_status")
             response = functions.check_task_status(arguments["task_name"])
+            return second_request(function_name, response)
         elif function_name == "close_task_by_name":
             print("close_task_by_name")
             response = functions.close_task_by_name(arguments["task_name"])
+            return second_request(function_name, response)
         elif function_name == "get_undone_tasks":
             print("get_undone_tasks")
             response = functions.get_undone_tasks()
-        return second_request(function_name, response)
+            return second_request(function_name, response)
+
     else:
+        apender = [{
+        "role": "assistant",
+        "content": message["content"] or "None",
+        }]
+        previous.append(apender[0])
         return message["content"]
 
-print(f"wheather in berlin: {request('what is the wehater in berlin?')}")
+print(request("what is the weather in berlin?"))
