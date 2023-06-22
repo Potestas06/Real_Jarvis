@@ -17,7 +17,7 @@ function_list = [
                 "properties": {
                     "city": {
                         "type": "string",
-                        "description": "The city to get the weather from, e.g. London"
+                        "description": "The city to get the weather from"
                     }
                 },
                 "required": ["city"]
@@ -31,7 +31,7 @@ function_list = [
                 "properties": {
                     "content": {
                         "type": "string",
-                        "description": "The content of the task, e.g. buy milk"
+                        "description": "The content of the task"
                     }
                 },
                 "required": ["content"]
@@ -45,7 +45,7 @@ function_list = [
                 "properties": {
                     "task_name": {
                         "type": "string",
-                        "description": "The name of the task, e.g. buy milk"
+                        "description": "The name of the task"
                     }
                 },
                 "required": ["task_name"]
@@ -59,7 +59,7 @@ function_list = [
                 "properties": {
                     "task_name": {
                         "type": "string",
-                        "description": "The name of the task, e.g. buy milk"
+                        "description": "The name of the task"
                     }
                 },
                 "required": ["task_name"]
@@ -87,8 +87,7 @@ def second_request(function_name, content):
         "name": function_name,
         "content": content
     }]
-    messages = message + [{"role": msg["role"], "content": msg["content"]} for msg in previous]
-
+    messages = [{"role": msg["role"], "content": msg["content"] or "None", "function_call": msg["function_call"] or "None" } for msg in previous] + message
     response = openai.ChatCompletion.create(
         model=os.getenv("MODEL"),
         messages=messages,
@@ -96,7 +95,6 @@ def second_request(function_name, content):
         function_call="auto"
     )
 
-    print("response: " + response)
     message = response.choices[0].message # type: ignore
     previous.append(message)
     return message["content"]
@@ -106,15 +104,15 @@ def request(text):
         "role": "user",
         "content": text
     }]
-    messages = message + [{"role": msg["role"], "content": msg["content"]} for msg in previous]
 
+    messages = message + [{"role": msg["role"], "content": msg["content"]} for msg in previous]
+    previous.append(message[0])
     response = openai.ChatCompletion.create(
         model=os.getenv("MODEL"),
         messages=messages,
         functions=function_list,
         function_call="auto"
     )
-    print(response)
     message = response.choices[0].message # type: ignore
     previous.append(message)
 
@@ -124,9 +122,7 @@ def request(text):
 
         response = None
         function_name = function_call["name"]
-
         if function_name == "check_weather":
-            print(arguments["city"])
             response = functions.check_weather(arguments["city"])
         elif function_name == "create_task":
             response = functions.create_task(arguments["content"])
@@ -136,11 +132,9 @@ def request(text):
             response = functions.close_task_by_name(arguments["task_name"])
         elif function_name == "get_undone_tasks":
             response = functions.get_undone_tasks()
-
-        if response is not None:
-            print(response)
-            second_request(function_name, response)
+        print(previous)
+        return second_request(function_name, response)
     else:
         return message["content"]
 
-request("what is the wehater in berlin?")
+print(request("what is the wehater in berlin?"))
