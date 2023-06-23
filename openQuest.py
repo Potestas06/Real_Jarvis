@@ -155,5 +155,3 @@ def request(text):
 
     else:
         return message["content"]
-
-print(request("close a task called test"))

@@ -79,7 +79,6 @@ class Assistant():
                                 self.robot_label.config(text="🤖")
                                 self.voice.say(anser)
                                 self.voice.runAndWait()
-                                break
                         except speech_recognition.UnknownValueError:
                             print("UnknownValueError at whisper")
                             self.recognizer = speech_recognition.Recognizer()
