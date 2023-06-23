@@ -8,6 +8,7 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAIKEY")
 url = "https://api.openai.com/v1/chat/completions"
 previous = []
+aimessage = "null"
 function_list = [
         {
             "name": "check_weather",
@@ -91,22 +92,19 @@ def second_request(function_name, content):
     print(previous)
     messages = [
         {
-            "role": msg["role"],
-            "content": msg["content"] or "None",
-            "name": msg["name"] or "None"
-        }
-        if msg["role"] == "function" else
+            "role": previous[0]["role"],
+            "content": previous[0]["content"]
+        },
         {
-            "role": msg["role"],
-            "content": msg["content"] or "None"
-        }
-        if msg["role"] == "assistant" else
+            "role": "assistant",
+            "content": "null",
+            
+        },
         {
-            "role": msg["role"],
-            "content": msg["content"] or "None",
-            "function_call": msg.get("function_call") or "None"
-        }
-        for msg in previous
+            "role": "function",
+            "name": function_name,
+            "content": content
+        },
     ]
 
 
@@ -126,6 +124,7 @@ def second_request(function_name, content):
 
 
 def request(text):
+    previous = []
     message = [{
         "role": "user",
         "content": text,
@@ -139,17 +138,8 @@ def request(text):
         function_call="auto"
     )
     message = response.choices[0].message # type: ignore
-
+    aimessage message
     if "function_call" in message:
-        apender = [{
-        "role": "assistant",
-        "content": message["content"] or "None",
-        "function_call": {
-            "name": message["function_call"]["name"] or "None",
-            "arguments": json.dumps(message["function_call"]["arguments"]) or "None"
-        }
-        }]
-        previous.append(apender[0])
         function_call = message["function_call"]
         arguments = json.loads(function_call["arguments"])
 
@@ -177,11 +167,6 @@ def request(text):
             return second_request(function_name, response)
 
     else:
-        apender = [{
-        "role": "assistant",
-        "content": message["content"] or "None",
-        }]
-        previous.append(apender[0])
         return message["content"]
 
 print(request("what is the weather in berlin?"))
