@@ -161,6 +161,7 @@ cython_debug/
 include
 scripts
 main_venv
+mainVenv
 pyvenv.cfg
 model/*
 model
