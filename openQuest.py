@@ -7,8 +7,7 @@ import functions
 load_dotenv()
 openai.api_key = os.getenv("OPENAIKEY")
 url = "https://api.openai.com/v1/chat/completions"
-previous = []
-aimessage = "null"
+aimessage = []
 function_list = [
         {
             "name": "check_weather",
@@ -82,23 +81,16 @@ function_list = [
         }
     ]
 
-def second_request(function_name, content):
-    message = [{
-        "role": "function",
-        "name": function_name,
-        "content": content
-    }]
-    previous.append(message[0])
-    print(previous)
+def second_request(function_name, content, previous):
     messages = [
         {
-            "role": previous[0]["role"],
-            "content": previous[0]["content"]
+            "role": "user",
+            "content": previous,
         },
         {
             "role": "assistant",
             "content": "null",
-            
+            "function_call": aimessage[0]["function_call"]
         },
         {
             "role": "function",
@@ -108,7 +100,6 @@ def second_request(function_name, content):
     ]
 
 
-    print(messages)
     response = openai.ChatCompletion.create(
         model=os.getenv("MODEL"),
         messages=messages,
@@ -116,29 +107,25 @@ def second_request(function_name, content):
         function_call="auto"
     )
 
-    print(response)
     message = response.choices[0].message # type: ignore
-    previous.append(message)
     return message["content"]
 
 
 
 def request(text):
-    previous = []
     message = [{
         "role": "user",
         "content": text,
     }]
-    previous.append(message[0])
-    messages = [{"role": msg["role"], "content": msg["content"]} for msg in previous]
+    previous = text
     response = openai.ChatCompletion.create(
         model=os.getenv("MODEL"),
-        messages=messages,
+        messages=message,
         functions=function_list,
         function_call="auto"
     )
     message = response.choices[0].message # type: ignore
-    aimessage message
+    aimessage.append(message)
     if "function_call" in message:
         function_call = message["function_call"]
         arguments = json.loads(function_call["arguments"])
@@ -148,25 +135,25 @@ def request(text):
         if function_name == "check_weather":
             print("check_weather")
             response = functions.check_weather(arguments["city"])
-            return second_request(function_name, response)
+            return second_request(function_name, response, previous)
         elif function_name == "create_task":
             print("create_task")
             response = functions.create_task(arguments["content"])
-            return second_request(function_name, response)
+            return second_request(function_name, response, previous)
         elif function_name == "check_task_status":
             print("check_task_status")
             response = functions.check_task_status(arguments["task_name"])
-            return second_request(function_name, response)
+            return second_request(function_name, response, previous)
         elif function_name == "close_task_by_name":
             print("close_task_by_name")
             response = functions.close_task_by_name(arguments["task_name"])
-            return second_request(function_name, response)
+            return second_request(function_name, response, previous)
         elif function_name == "get_undone_tasks":
             print("get_undone_tasks")
             response = functions.get_undone_tasks()
-            return second_request(function_name, response)
+            return second_request(function_name, response, previous)
 
     else:
         return message["content"]
 
-print(request("what is the weather in berlin?"))
+print(request("close a task called test"))
