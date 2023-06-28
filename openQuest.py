@@ -156,4 +156,4 @@ def request(text):
     else:
         return message["content"]
 
-print(request("habe ich noch unerledigte aufgaben?"))
+print(request("warum ist der himmel blau?"))
