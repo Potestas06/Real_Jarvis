@@ -67,7 +67,7 @@ function_list = [
         },
         {
             "name": "get_undone_tasks",
-            "description": "Gets all undone tasks and returns them as a list",
+            "description": "Gets all undone tasks and returns the name of them",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -155,3 +155,5 @@ def request(text):
 
     else:
         return message["content"]
+
+print(request("habe ich noch unerledigte aufgaben?"))

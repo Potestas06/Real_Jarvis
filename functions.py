@@ -108,6 +108,7 @@ def check_task_status(task_name):
 
 
 
+
 def get_undone_tasks():
     base_url = "https://api.todoist.com/rest/v2/tasks"
 
@@ -126,7 +127,7 @@ def get_undone_tasks():
                 if not task["is_completed"]:
                     undone_tasks.append(task["content"])
 
-            return undone_tasks
+            return "\n".join(undone_tasks)  # Concatenate tasks with line breaks
         else:
             return "Failed to fetch tasks."
     except requests.exceptions.RequestException as e:
