@@ -101,7 +101,7 @@ def second_request(function_name, content, previous):
 
 
     response = openai.ChatCompletion.create(
-        model=os.getenv("MODEL"),
+        model="gpt-3.5-turbo-0613",
         messages=messages,
         functions=function_list,
         function_call="auto"
@@ -119,7 +119,7 @@ def request(text):
     }]
     previous = text
     response = openai.ChatCompletion.create(
-        model=os.getenv("MODEL"),
+        model="gpt-3.5-turbo-0613",
         messages=message,
         functions=function_list,
         function_call="auto"

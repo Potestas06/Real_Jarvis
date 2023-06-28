@@ -1,7 +1,7 @@
 SpeechRecognition
 pyttsx3
 pyaudio
-#llama-cpp-python
+llama-cpp-python
 customtkinter
 argparse
 python-dotenv
