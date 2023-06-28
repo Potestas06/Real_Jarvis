@@ -4,6 +4,7 @@ import pyttsx3
 # initilaize the ai model
 engin = pyttsx3.init()
 print("Initializing...")
+# replace model path with the path to your model
 llm = Llama(model_path="model/Model_V6.bin")
 print("loaded models")
 
