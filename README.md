@@ -1,6 +1,59 @@
 # Real_Jarvis
 
+## Description
 
+![image](https://github.com/Potestas06/Real_Jarvis/assets/94400853/f0aafeff-d51c-45f0-898d-2fa31886c3b0)
+
+a small Ai voice assistant
+
+## Getting Started
+### Dependencies
+- python
+- SpeechRecognition
+- pyttsx3
+- pyaudio
+- llama-cpp-python
+- customtkinter
+- argparse
+- python-dotenv
+- openai
+- pvporcupine
+- https://github.com/openai/whisper.git soundfile
+
+### Installing
+```
+git clone https://github.com/Potestas06/Real_Jarvis
+
+python -m venv {envrioment name}
+
+pip install -r requirements.txt
+
+pip install git+https://github.com/openai/whisper.git soundfile
+```
+now u need to get ur api keys
+- https://console.picovoice.ai/
+- https://openai.com/
+- https://openweathermap.org/
+- https://todoist.com/
+
+now u need to create a .env fille
+```
+APIKEY = picovoice api key
+OPENAIKEY = openai key
+WHEATERKEY = openweathermap
+TODOAPI = todoist api key
+```
+replace the names with ur api key
+
+### Executing program
+if u wan't to run it localy:
+```
+python reconizer_local.py
+```
+if u wan't to use functions:
+```
+python reconizer_OpenAI.py
+```
 
 ## testcases
 
