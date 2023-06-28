@@ -155,5 +155,3 @@ def request(text):
 
     else:
         return message["content"]
-
-print(request("warum ist der himmel blau?"))
