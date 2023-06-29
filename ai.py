@@ -14,11 +14,11 @@ def questionAI(question):
         print("asking...")
         engin.say("sorry i did not understand you")
         engin.runAndWait()
-        return()
+        return("sorry i did not understand you")
     else:
         print("asking...")
         asked = llm("Question: " + question + "  Answer:", stop=["Question:", "\n"], max_tokens=400)
-        anser = asked['choices'][0]['text'] # type: ignore
+        anser = asked['choices'][0]['text']
         print(anser)
         if anser != "":
             engin.say(anser)
