@@ -10,13 +10,19 @@ print("loaded models")
 
 # ask the ai a question
 def questionAI(question):
-    print("asking...")
-    asked = llm("Question: " + question + "  Answer:", stop=["Question:", "\n"], max_tokens=400)
-    anser = asked['choices'][0]['text'] # type: ignore
-    print(anser)
-    if anser != "":
-        engin.say(anser)
+    if question == "":
+        print("asking...")
+        engin.say("sorry i did not understand you")
         engin.runAndWait()
+        return()
     else:
-        engin.say("sorry, ich kann dir nicht helfen")
-    return(anser)
+        print("asking...")
+        asked = llm("Question: " + question + "  Answer:", stop=["Question:", "\n"], max_tokens=400)
+        anser = asked['choices'][0]['text'] # type: ignore
+        print(anser)
+        if anser != "":
+            engin.say(anser)
+            engin.runAndWait()
+        else:
+            engin.say("sorry, ich kann dir nicht helfen")
+        return(anser)
