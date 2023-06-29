@@ -55,8 +55,6 @@ class Assistant():
                     print("Wake word detected!")
                     with speech_recognition.Microphone() as mic:
                         self.recognizer.adjust_for_ambient_noise(mic)
-                        print("listening...")
-                        self.robot_label.config(fg="red")
                         try:
                             audio = self.recognizer.listen(mic)
                             print("listening...")
