@@ -113,45 +113,48 @@ def second_request(function_name, content, previous):
 
 
 def request(text):
-    message = [{
-        "role": "user",
-        "content": text,
-    }]
-    previous = text
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0613",
-        messages=message,
-        functions=function_list,
-        function_call="auto"
-    )
-    message = response.choices[0].message # type: ignore
-    aimessage.append(message)
-    if "function_call" in message:
-        function_call = message["function_call"]
-        arguments = json.loads(function_call["arguments"])
+    if text != "":
+        message = [{
+            "role": "user",
+            "content": text,
+        }]
+        previous = text
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-0613",
+            messages=message,
+            functions=function_list,
+            function_call="auto"
+        )
+        message = response.choices[0].message # type: ignore
+        aimessage.append(message)
+        if "function_call" in message:
+            function_call = message["function_call"]
+            arguments = json.loads(function_call["arguments"])
 
-        response = None
-        function_name = function_call["name"]
-        if function_name == "check_weather":
-            print("check_weather")
-            response = functions.check_weather(arguments["city"])
-            return second_request(function_name, response, previous)
-        elif function_name == "create_task":
-            print("create_task")
-            response = functions.create_task(arguments["content"])
-            return second_request(function_name, response, previous)
-        elif function_name == "check_task_status":
-            print("check_task_status")
-            response = functions.check_task_status(arguments["task_name"])
-            return second_request(function_name, response, previous)
-        elif function_name == "close_task_by_name":
-            print("close_task_by_name")
-            response = functions.close_task_by_name(arguments["task_name"])
-            return second_request(function_name, response, previous)
-        elif function_name == "get_undone_tasks":
-            print("get_undone_tasks")
-            response = functions.get_undone_tasks()
-            return second_request(function_name, response, previous)
+            response = None
+            function_name = function_call["name"]
+            if function_name == "check_weather":
+                print("check_weather")
+                response = functions.check_weather(arguments["city"])
+                return second_request(function_name, response, previous)
+            elif function_name == "create_task":
+                print("create_task")
+                response = functions.create_task(arguments["content"])
+                return second_request(function_name, response, previous)
+            elif function_name == "check_task_status":
+                print("check_task_status")
+                response = functions.check_task_status(arguments["task_name"])
+                return second_request(function_name, response, previous)
+            elif function_name == "close_task_by_name":
+                print("close_task_by_name")
+                response = functions.close_task_by_name(arguments["task_name"])
+                return second_request(function_name, response, previous)
+            elif function_name == "get_undone_tasks":
+                print("get_undone_tasks")
+                response = functions.get_undone_tasks()
+                return second_request(function_name, response, previous)
 
+        else:
+            return message["content"]
     else:
-        return message["content"]
+        return "Sorry, I did not understand you."
