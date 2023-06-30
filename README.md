@@ -25,7 +25,9 @@ a small Ai voice assistant
 ```
 git clone https://github.com/Potestas06/Real_Jarvis
 
-python -m venv {envrioment name}
+python -m venv {environment name}
+
+{environment name}/Scripts/activate
 
 pip install -r requirements.txt
 
