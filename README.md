@@ -2,7 +2,8 @@
 
 ## Description
 
-![image](https://github.com/Potestas06/Real_Jarvis/assets/94400853/f0aafeff-d51c-45f0-898d-2fa31886c3b0)
+![Günter](https://github.com/Potestas06/Real_Jarvis/assets/94400853/19f19624-ffda-4351-9c14-9cd90f71e8e4)
+
 
 a small Ai voice assistant
 
@@ -24,7 +25,9 @@ a small Ai voice assistant
 ```
 git clone https://github.com/Potestas06/Real_Jarvis
 
-python -m venv {envrioment name}
+python -m venv {environment name}
+
+{environment name}/Scripts/activate
 
 pip install -r requirements.txt
 
