@@ -75,7 +75,7 @@ class Assistant():
                                 self.robot_label.config(fg="black")
                                 self.robot_label.config(text="⌛")
                                 anser = openQuest.request(text)
-                                self.answer_label.config(text=f"anser: {anser}")
+                                self.answer_label.config(text=f"answer: {anser}")
                                 self.robot_label.config(text="🤖")
                                 self.voice.say(anser)
                                 self.voice.runAndWait()

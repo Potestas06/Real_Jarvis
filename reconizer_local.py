@@ -69,7 +69,7 @@ class Assistant():
                                 self.robot_label.config(fg="black")
                                 self.robot_label.config(text="⌛")
                                 anser = ai.questionAI(text)
-                                self.answer_label.config(text="anser: " + anser)
+                                self.answer_label.config(text="answer: " + anser)
                                 self.robot_label.config(text="🤖")
                                 break
                         except speech_recognition.UnknownValueError:
