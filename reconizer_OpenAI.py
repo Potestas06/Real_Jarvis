@@ -61,10 +61,11 @@ class Assistant():
                     print("Wake word detected!")
                     with speech_recognition.Microphone() as mic:
                         self.recognizer.adjust_for_ambient_noise(mic)
+                        audio = self.recognizer.listen(mic)
+                        print("listening...")
+                        self.robot_label.config(fg="red")
                         try:
                             audio = self.recognizer.listen(mic)
-                            print("listening...")
-                            self.robot_label.config(fg="red")
                             text = self.recognizer.recognize_whisper(audio)
                             self.text_label.config(text="asked: " +text)
                             if text == "stop":
